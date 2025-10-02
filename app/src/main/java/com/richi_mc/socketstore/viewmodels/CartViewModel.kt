@@ -1,12 +1,11 @@
 package com.richi_mc.socketstore.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.richi_mc.socketstore.interfaz.CarritoItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-
+/*
 // 1. Creamos una nueva clase para representar el estado de un item EN el carrito
 data class CartItemState(
     val product: CarritoItem,
@@ -77,4 +76,4 @@ class CartViewModel : ViewModel() {
             currentList.filterNot { it.product.nombre == item.nombre }
         }
     }
-}
+}*/
