@@ -1,5 +1,6 @@
 package com.richi_mc.socketstore.ui.presentation.cartScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,8 +51,9 @@ fun CartScreen(
     onNavigateBack: () -> Unit
 ) {
     val cartViewModel = viewModel<CartViewModel>()
-    val cartItems   = cartViewModel.products.collectAsState()
     val payDoIt     = cartViewModel.payDoit.collectAsState()
+
+    val cartItems   = cartViewModel.products.collectAsState()
 
         Scaffold(
             topBar = {
@@ -106,6 +109,7 @@ fun CarritoItemCard(
     item: Producto,
     onDelete: (product: Producto) -> Unit
 ) {
+    val context = LocalContext.current
     val quantity = remember { mutableIntStateOf(item.quantity) }
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -124,6 +128,10 @@ fun CarritoItemCard(
                 IconButton(onClick = {
                     quantity.intValue--
                     item.quantity = quantity.intValue
+
+                    if(quantity.intValue == 0) {
+                        onDelete(item)
+                    }
                 }) {
                     Icon(Icons.Default.Clear, contentDescription = "Quitar uno")
                 }
@@ -134,7 +142,15 @@ fun CarritoItemCard(
                 )
                 IconButton(onClick = {
                     quantity.intValue++
-                    item.quantity = quantity.intValue
+
+                    if( (item.stock - item.quantity < 0) ) {
+                        Toast.makeText(context, "No hay mas ${item.name} disponibles", Toast.LENGTH_LONG).show()
+                        quantity.intValue--
+                        item.quantity = quantity.intValue
+                    }
+                    else {
+                        item.quantity = quantity.intValue
+                    }
                 }) {
                     Icon(Icons.Default.Add, contentDescription = "Añadir uno")
                 }
